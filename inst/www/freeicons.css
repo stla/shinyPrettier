@@ -1,0 +1,6 @@
+.freeicon-css::before {
+  content: url(./freeicons/css.svg);
+}
+.freeicon-html::before {
+  content: url(./freeicons/html.svg);
+}

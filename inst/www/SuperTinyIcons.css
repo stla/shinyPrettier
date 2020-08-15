@@ -1,0 +1,9 @@
+.supertinyicon-javascript::before {
+  content: url(./SuperTinyIcons/javascript.svg);
+}
+.supertinyicon-markdown::before {
+  content: url(./SuperTinyIcons/markdown.svg);
+}
+.supertinyicon-react::before {
+  content: url(./SuperTinyIcons/react.svg);
+}
