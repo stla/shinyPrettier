@@ -6,7 +6,7 @@
 #' @importFrom shinyMultiActionButton multiActionButton subButton
 #' @importFrom shinyAce aceEditor
 #' @noRd
-ui <- function(language, code, parser, js){
+ui <- function(language, code, parser){
 
   fluidPage(
     theme = shinytheme("cyborg"),
@@ -18,7 +18,7 @@ ui <- function(language, code, parser, js){
       tags$script(src = "wwwSP/parser-html.js"),
       tags$script(src = "wwwSP/parser-markdown.js"),
       tags$script(src = "wwwSP/parser-postcss.js"),
-      tags$script(js),
+      tags$script(src = "wwwSP/shinyPrettier.js"),
       tags$link(rel = "stylesheet", href = "wwwSP/shinyPrettier.css"),
       tags$link(rel = "stylesheet", href = "wwwSP/freeicons.css"),
       tags$link(rel = "stylesheet", href = "wwwSP/SuperTinyIcons.css")
@@ -125,48 +125,62 @@ ui <- function(language, code, parser, js){
 }
 
 #' @importFrom shinyAce updateAceEditor
-server <- function(input, output, session){
+server <- function(language){
+  function(input, output, session){
 
-  observeEvent(input[["prettify"]], {
-    session$sendCustomMessage("code", input[["code"]])
-  })
+    Language <- reactiveVal(language)
 
-  observeEvent(input[["prettyCode"]], {
-    updateAceEditor(session, "ace", value = input[["prettyCode"]])
-    if(input[["prettyCode"]] != ""){
+    observeEvent(input[["prettify"]], {
+      parser <- switch(
+        Language(),
+        css = "css",
+        html = "html",
+        javascript = "babel",
+        jsx = "babel",
+        markdown = "markdown"
+      )
+      session$sendCustomMessage("code", list(code = input[["code"]], parser = parser))
+    })
+
+    observeEvent(input[["prettyCode"]], {
+      updateAceEditor(session, "ace", value = input[["prettyCode"]])
+      if(input[["prettyCode"]] != ""){
+        flashMessage <- list(
+          message = "Pretty code copied to the clipboard",
+          title = "Copied!",
+          type = "success",
+          icon = "glyphicon glyphicon-check",
+          withTime = TRUE
+        )
+        session$sendCustomMessage("flash", flashMessage)
+      }
+    })
+
+    observeEvent(input[["prettifyError"]], {
       flashMessage <- list(
-        message = "Pretty code copied to the clipboard",
-        title = "Copied!",
-        type = "success",
-        icon = "glyphicon glyphicon-check",
-        withTime = TRUE
+        message = "Prettifier has failed",
+        title = "Error!",
+        type = "danger",
+        icon = "glyphicon glyphicon-flash",
+        withTime = TRUE,
+        animShow = "rotateInDownLeft",
+        animHide = "bounceOutRight",
+        position = list("bottom-left", list(0, 0.01))
       )
       session$sendCustomMessage("flash", flashMessage)
-    }
-  })
+    })
 
-  observeEvent(input[["prettifyError"]], {
-    flashMessage <- list(
-      message = "Prettifier has failed",
-      title = "Error!",
-      type = "danger",
-      icon = "glyphicon glyphicon-flash",
-      withTime = TRUE,
-      animShow = "rotateInDownLeft",
-      animHide = "bounceOutRight",
-      position = list("bottom-left", list(0, 0.01))
-    )
-    session$sendCustomMessage("flash", flashMessage)
-  })
+    output[["error"]] <- renderPrint({
+      cat(input[["prettifyError"]])
+    })
 
-  output[["error"]] <- renderPrint({
-    cat(input[["prettifyError"]])
-  })
+    observeEvent(input[["language"]], {
+      updateAceEditor(session, "ace", mode = input[["language"]])
+      updateAceEditor(session, "code", mode = input[["language"]])
+      Language(input[["language"]])
+    })
 
-  observe({
-    print(input[["language"]])
-  })
-
+  }
 }
 
 
@@ -189,20 +203,11 @@ shinyPrettier <- function(file, language, code){
     jsx = "babel",
     markdown = "markdown"
   )
-  js <- HTML(
-    sprintf(
-      paste0(
-        readLines(
-          system.file("www", "jsTemplate.js", package = "shinyPrettier")
-        ), collapse = "\n"
-      ), parser
-    )
-  )
   require(shiny)
   require(shinyAce)
   require(shinythemes)
   require(shinyMultiActionButton)
-  shinyApp(ui(language, code, parser, js), server)
+  shinyApp(ui(language, code, parser), server(language))
 }
 
 

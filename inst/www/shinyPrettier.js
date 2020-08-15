@@ -14,12 +14,12 @@ function heightUpdateFunction(editor, aceid) {
   editor.resize();
 }
 
-function prettify(code) {
+function prettify(codeAndParser) {
   var prettyCode,
     error = null;
   try {
-    prettyCode = prettier.format(code, {
-      parser: "%s",
+    prettyCode = prettier.format(codeAndParser.code, {
+      parser: codeAndParser.parser,
       plugins: prettierPlugins,
     });
   } catch (err) {

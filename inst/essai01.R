@@ -1,6 +1,6 @@
 library(shinyPrettier)
 
-language <- "markdown"
+language <- "jsx"
 code <- "function test(x){return x+1;}"
 # code <- ".myclass{color:red;font-size:10px}"
 code <- "
