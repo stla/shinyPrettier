@@ -4,7 +4,7 @@
 \alias{shinyPrettier}
 \title{Shiny prettier}
 \usage{
-shinyPrettier(file, language, code)
+shinyPrettier(file, language, code, theme = "cobalt", fontSize = 16)
 }
 \arguments{
 \item{file}{file containing the code to be prettified}
@@ -18,6 +18,9 @@ option unless the extension is not standard; available languages are:
 \item{code}{ignored if \code{file} is provided, otherwise a character string
 containing the code to be prettified; the \code{language} option must be
 set if you use this way}
+
+\item{theme, fontSize}{options passed to
+\code{\link[shinyAce:aceEditor]{aceEditor}}}
 }
 \description{
 Launch a Shiny app for code prettifying.

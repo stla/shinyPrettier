@@ -6,7 +6,7 @@
 #' @importFrom shinyMultiActionButton multiActionButton subButton
 #' @importFrom shinyAce aceEditor
 #' @noRd
-ui <- function(language, code, parser){
+ui <- function(language, code, parser, theme, fontSize){
 
   fluidPage(
     theme = shinytheme("cyborg"),
@@ -100,8 +100,8 @@ ui <- function(language, code, parser){
               "code",
               value = code,
               mode = language,
-              theme = "cobalt",
-              fontSize = 16,
+              theme = theme,
+              fontSize = fontSize,
               height = "400px"
             )
           ),
@@ -111,8 +111,8 @@ ui <- function(language, code, parser){
               "ace",
               value = "",
               mode = language,
-              theme = "cobalt",
-              fontSize = 16,
+              theme = theme,
+              fontSize = fontSize,
               readOnly = TRUE,
               height = "400px"
             )
@@ -213,6 +213,8 @@ server <- function(language, notfound){
 #' @param code ignored if \code{file} is provided, otherwise a character string
 #'   containing the code to be prettified; the \code{language} option must be
 #'   set if you use this way
+#' @param theme,fontSize options passed to
+#'   \code{\link[shinyAce:aceEditor]{aceEditor}}
 #'
 #' @importFrom tools file_ext
 #' @export
@@ -234,7 +236,8 @@ server <- function(language, notfound){
 #' "
 #'
 #' shinyPrettier(language = "markdown", code = code)
-shinyPrettier <- function(file, language, code){
+shinyPrettier <- function(file, language, code,
+                          theme = "cobalt", fontSize = 16){
   notfound <- FALSE
   if(!missing(file)){
     code <- paste0(readLines(file), collapse = "\n")
@@ -272,7 +275,8 @@ shinyPrettier <- function(file, language, code){
   require(shinyAce)
   require(shinythemes)
   require(shinyMultiActionButton)
-  shinyApp(ui(language, code, parser), server(language, notfound))
+  shinyApp(ui(language, code, parser, theme, fontSize),
+           server(language, notfound))
 }
 
 
