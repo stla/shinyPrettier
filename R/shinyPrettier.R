@@ -125,8 +125,24 @@ ui <- function(language, code, parser){
 }
 
 #' @importFrom shinyAce updateAceEditor
-server <- function(language){
+server <- function(language, notfound){
   function(input, output, session){
+
+    if(notfound){
+      flashMessage <- list(
+        message = "Use the button to select a language.",
+        title = "Language not recognized",
+        type = "warning",
+        icon = "glyphicon glyphicon-ban-circle",
+        withTime = FALSE,
+        closeTime = 10000,
+        animShow = "flash",
+        animHide = "backOutDown",
+        position = list("center", list(0, 0))
+      )
+      session$sendCustomMessage("flash", flashMessage)
+      session$sendCustomMessage("disableButton", TRUE)
+    }
 
     Language <- reactiveVal(language)
 
@@ -175,6 +191,7 @@ server <- function(language){
     })
 
     observeEvent(input[["language"]], {
+      session$sendCustomMessage("disableButton", FALSE)
       updateAceEditor(session, "ace", mode = input[["language"]])
       updateAceEditor(session, "code", mode = input[["language"]])
       Language(input[["language"]])
@@ -184,30 +201,78 @@ server <- function(language){
 }
 
 
-#' Title
+#' Shiny prettier
+#' @description Launch a Shiny app for code prettifying.
 #'
-#' @param file
-#' @param language
-#' @param code
+#' @param file file containing the code to be prettified
+#' @param language language; if \code{file} is provided, then the language
+#'   is guessed from the file extension, and it is not necessary to set this
+#'   option unless the extension is not standard; available languages are:
+#'   \code{"css"}, \code{"html"}, \code{"javascript"}, \code{"jsx"}, and
+#'   \code{"markdown"}
+#' @param code ignored if \code{file} is provided, otherwise a character string
+#'   containing the code to be prettified; the \code{language} option must be
+#'   set if you use this way
 #'
-#' @return
+#' @importFrom tools file_ext
 #' @export
 #'
-#' @examples # X
+#' @examples code <- "
+#' #  Title
+#' *The JavaScript code below will be prettified as well!*
+#' ```js
+#' function hello(x){return x+1}
+#' ```
+#' Pilot|Airport|Hours
+#' --|:--:|--:
+#' John Doe|SKG|1338
+#' Jane Roe|JFK|314
+#'
+#' _______________________
+#' Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+#' Curabitur consectetur maximus risus, sed maximus tellus tincidunt et.
+#' "
+#'
+#' shinyPrettier(language = "markdown", code = code)
 shinyPrettier <- function(file, language, code){
+  notfound <- FALSE
+  if(!missing(file)){
+    code <- paste0(readLines(file), collapse = "\n")
+    ext <- file_ext(file)
+    if(missing(language)){
+      language <- switch(
+        tolower(ext),
+        css = "css",
+        html = "html",
+        js = "javascript",
+        jsx = "jsx",
+        md = "markdown",
+        markdown = "markdown",
+        rmd = "markdown"
+      )
+      if(is.null(language)){
+        notfound <- TRUE
+        language <- "text"
+      }
+    }
+  }
   parser <- switch(
     language,
     css = "css",
     html = "html",
     javascript = "babel",
     jsx = "babel",
-    markdown = "markdown"
+    markdown = "markdown",
+    text = "text"
   )
+  if(is.null(parser)){
+    stop("Unrecognized language.")
+  }
   require(shiny)
   require(shinyAce)
   require(shinythemes)
   require(shinyMultiActionButton)
-  shinyApp(ui(language, code, parser), server(language))
+  shinyApp(ui(language, code, parser), server(language, notfound))
 }
 
 

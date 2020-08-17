@@ -12,5 +12,6 @@ LazyData: true
 Imports: shiny,
   shinyAce,
   shinythemes,
-  shinyMultiActionButton
+  shinyMultiActionButton,
+  tools
 RoxygenNote: 7.1.1

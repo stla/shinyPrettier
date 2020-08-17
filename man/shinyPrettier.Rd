@@ -2,19 +2,42 @@
 % Please edit documentation in R/shinyPrettier.R
 \name{shinyPrettier}
 \alias{shinyPrettier}
-\title{Title}
+\title{Shiny prettier}
 \usage{
 shinyPrettier(file, language, code)
 }
 \arguments{
-\item{code}{}
-}
-\value{
+\item{file}{file containing the code to be prettified}
 
+\item{language}{language; if \code{file} is provided, then the language
+is guessed from the file extension, and it is not necessary to set this
+option unless the extension is not standard; available languages are:
+\code{"css"}, \code{"html"}, \code{"javascript"}, \code{"jsx"}, and
+\code{"markdown"}}
+
+\item{code}{ignored if \code{file} is provided, otherwise a character string
+containing the code to be prettified; the \code{language} option must be
+set if you use this way}
 }
 \description{
-Title
+Launch a Shiny app for code prettifying.
 }
 \examples{
-# X
+code <- "
+#  Title
+*The JavaScript code below will be prettified as well!*
+```js
+function hello(x){return x+1}
+```
+Pilot|Airport|Hours
+--|:--:|--:
+John Doe|SKG|1338
+Jane Roe|JFK|314
+
+_______________________
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Curabitur consectetur maximus risus, sed maximus tellus tincidunt et.
+"
+
+shinyPrettier(language = "markdown", code = code)
 }

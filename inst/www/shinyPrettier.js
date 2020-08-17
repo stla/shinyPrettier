@@ -48,6 +48,9 @@ function flashFunction(opts) {
 }
 
 $(document).on("shiny:connected", function () {
+  Shiny.addCustomMessageHandler("disableButton", function(x){
+    $("#prettify").prop("disabled", x);
+  });
   Shiny.addCustomMessageHandler("flash", flashFunction);
   var editor = ace.edit("ace");
   heightUpdateFunction(editor, "ace");
@@ -61,3 +64,4 @@ $(document).on("shiny:connected", function () {
   });
   Shiny.addCustomMessageHandler("code", prettify);
 });
+
