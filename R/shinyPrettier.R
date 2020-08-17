@@ -235,7 +235,9 @@ server <- function(language, notfound){
 #' Curabitur consectetur maximus risus, sed maximus tellus tincidunt et.
 #' "
 #'
-#' shinyPrettier(language = "markdown", code = code)
+#' if(interactive()){
+#'   shinyPrettier(language = "markdown", code = code)
+#' }
 shinyPrettier <- function(file, language, code,
                           theme = "cobalt", fontSize = 16){
   notfound <- FALSE
@@ -271,10 +273,10 @@ shinyPrettier <- function(file, language, code,
   if(is.null(parser)){
     stop("Unrecognized language.")
   }
-  require(shiny)
-  require(shinyAce)
-  require(shinythemes)
-  require(shinyMultiActionButton)
+  requireNamespace("shiny")
+  requireNamespace("shinyAce")
+  requireNamespace("shinythemes")
+  requireNamespace("shinyMultiActionButton")
   shinyApp(ui(language, code, parser, theme, fontSize),
            server(language, notfound))
 }

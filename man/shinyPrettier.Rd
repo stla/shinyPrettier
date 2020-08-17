@@ -42,5 +42,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 Curabitur consectetur maximus risus, sed maximus tellus tincidunt et.
 "
 
-shinyPrettier(language = "markdown", code = code)
+if(interactive()){
+  shinyPrettier(language = "markdown", code = code)
+}
 }
