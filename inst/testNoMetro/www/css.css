@@ -1,0 +1,180 @@
+.multi-action {
+    display: inline-block;
+    position: relative;
+    width: 56px;
+    height: 56px;
+}
+
+.multi-action .mui-action-button {
+    position: absolute;
+    z-index: 2;
+    margin: 0!important;
+}
+
+.mui-action-button {
+    padding: 0;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    line-height: 56px;
+    text-align: center;
+    display: inline-block;
+    font-weight: 400;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    font-size: .875rem;
+    -webkit-transition: all .15s ease-in-out;
+    -o-transition: all .15s ease-in-out;
+    transition: all .15s ease-in-out;
+    background-color: #ebebeb;
+    color: #1d1d1d;
+    cursor: pointer;
+    outline: 0;
+    position: relative;
+    -webkit-box-shadow: 0 2px 10px 0 rgba(0,0,0,.16), 0 2px 5px 0 rgba(0,0,0,.26);
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,.16), 0 2px 5px 0 rgba(0,0,0,.26);
+}
+
+.fg-white {
+    color: #fff!important;
+}
+
+.bg-red {
+    background-color: #ce352c!important;
+}
+
+.multi-action .mui-action-button.active.rotate-minus .icon {
+    -webkit-transform: rotate(-45deg) scale(1.2);
+    -ms-transform: rotate(-45deg) scale(1.2);
+    transform: rotate(-45deg) scale(1.2) /*translateY(-1px)*/;
+}
+
+.multi-action .mui-action-button .icon {
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+}
+.mui-action-button .icon {
+   /* width: 20px;
+    height: 20px; */
+    line-height: 25px;
+    font-size: 25px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.fg-white {
+    color: #fff!important;
+}
+
+.mui-action-button .icon>* {
+    width: 100%;
+    max-height: 100%;
+    display: inline-block;
+}
+
+/*[class*=mif-] { /* mif-cog
+    font-family: metro!important;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    display: inline-block;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.mif-cog::before {
+    content: "\e994";
+}*/
+
+.multi-action .actions {
+    position: absolute;
+    list-style: none inside none;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    float: left;
+    background-color: transparent;
+    top: 8px;
+    left: 8px;
+    z-index: 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.multi-action .actions li {
+    position: absolute;
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+/*    -webkit-box-shadow: none;
+    box-shadow: none; */
+/*    -webkit-box-shadow: 0 2px 10px 0 rgba(0,0,0,.16), 0 2px 5px 0 rgba(0,0,0,.26);
+    box-shadow: 0 2px 10px 0 rgba(0,0,0,.16), 0 2px 5px 0 rgba(0,0,0,.26); */
+    margin: 0;
+    background: #989898;
+    color: #fff;
+    -webkit-transform: scale(.2);
+    -ms-transform: scale(.2);
+    transform: scale(.2);
+    line-height: 40px;
+    font-size: 20px;
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+    cursor: pointer;
+}
+
+.multi-action .mui-action-button.active~.actions.drop-bottom li:nth-child(1), .multi-action .mui-action-button.active~.actions.drop-down li:nth-child(1) {
+    margin-top: 56px;
+}
+
+.multi-action .mui-action-button.active~.actions.drop-bottom li:nth-child(2), .multi-action .mui-action-button.active~.actions.drop-down li:nth-child(2) {
+    margin-top: 104px;
+}
+
+.multi-action .mui-action-button.active~.actions.drop-bottom li:nth-child(3), .multi-action .mui-action-button.active~.actions.drop-down li:nth-child(3) {
+    margin-top: 152px;
+}
+
+.multi-action .mui-action-button.active~.actions.drop-bottom li:nth-child(4), .multi-action .mui-action-button.active~.actions.drop-down li:nth-child(4) {
+    margin-top: 200px;
+}
+
+.multi-action .mui-action-button.active~.actions.drop-bottom li:nth-child(5), .multi-action .mui-action-button.active~.actions.drop-down li:nth-child(5) {
+    margin-top: 248px;
+}
+
+.multi-action .mui-action-button.active~.actions li {
+    -webkit-transition: all .3s;
+    -o-transition: all .3s;
+    transition: all .3s;
+    -webkit-transform: scale(1);
+    -ms-transform: scale(1);
+    transform: scale(1);
+}
+
+.multi-action .actions li a {
+    background: inherit;
+    color: inherit;
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    line-height: 40px;
+    text-align: center;
+    text-decoration: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
