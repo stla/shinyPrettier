@@ -1,9 +1,59 @@
 # Icon made by [author link] from www.freeicons.io
 # E.g.: Icon made by Free icons from www.freeicons.io
 
+#' @importFrom shiny tags
+#' @noRd
+subButton <- function(
+  id, icon = NULL, tooltip = NULL, onclick = NULL
+){
+  tags$li(
+    style = "background-color: transparent;",
+    tags$a(
+      id = id,
+      href = "#",
+      class = "action-button mui-action-button",
+      onclick = onclick,
+      tags$span(
+        class = icon,
+        title = tooltip
+      )
+    )
+  )
+}
+
+multiActionButton <- function(
+  rotate = TRUE, bg = NULL, fg = NULL,
+  icon = NULL,
+  direction = "right", subButtons
+){
+  rotate <- ifelse(rotate, "rotate-minus ", "")
+  ultag <- function(...){
+    tags$ul(
+      class = sprintf("actions drop-%s", direction),
+      ...
+    )
+  }
+  tags$div(
+    class = "multi-action",
+    tags$button(
+      class = paste0(
+        "action-button mui-action-button ",
+        rotate,
+        sprintf("bg-%s ",bg),
+        sprintf("fg-%s",fg)
+      ),
+      onclick = "$(this).toggleClass('active')",
+      tags$span(
+        class = "icon", icon
+      )
+    ),
+    do.call(ultag, subButtons)
+  )
+}
+
+
 #' @import shiny
 #' @importFrom shinythemes shinytheme
-#' @importFrom shinyMultiActionButton multiActionButton subButton
 #' @importFrom shinyAce aceEditor
 #' @noRd
 ui <- function(language, code, parser, theme, fontSize){
@@ -20,6 +70,7 @@ ui <- function(language, code, parser, theme, fontSize){
       tags$script(src = "wwwSP/parser-postcss.js"),
       tags$script(src = "wwwSP/shinyPrettier.js"),
       tags$link(rel = "stylesheet", href = "wwwSP/shinyPrettier.css"),
+      tags$link(rel = "stylesheet", href = "wwwSP/multiActionButton.css"),
       tags$link(rel = "stylesheet", href = "wwwSP/freeicons.css"),
       tags$link(rel = "stylesheet", href = "wwwSP/SuperTinyIcons.css")
     ),
@@ -32,23 +83,23 @@ ui <- function(language, code, parser, theme, fontSize){
         width = 1,
         multiActionButton(
           bg = "red", fg = "white",
-          icon = "cog", direction = "bottom",
+          icon = icon("code"), direction = "bottom",
           subButtons = list(
             subButton(id = "css", icon = "freeicon-css",
-                      tooltip = "css",
-                      onclick = "Shiny.setInputValue('language','css');"),
+                       tooltip = "css",
+                       onclick = "Shiny.setInputValue('language','css');"),
             subButton(id = "html", icon = "freeicon-html",
-                      tooltip = "html",
-                      onclick = "Shiny.setInputValue('language','html');"),
+                       tooltip = "html",
+                       onclick = "Shiny.setInputValue('language','html');"),
             subButton(id = "javascript", icon = "supertinyicon-javascript",
-                      tooltip = "javascript",
-                      onclick = "Shiny.setInputValue('language','javascript');"),
+                       tooltip = "javascript",
+                       onclick = "Shiny.setInputValue('language','javascript');"),
             subButton(id = "markdown", icon = "supertinyicon-markdown",
-                      tooltip = "markdown",
-                      onclick = "Shiny.setInputValue('language','markdown');"),
+                       tooltip = "markdown",
+                       onclick = "Shiny.setInputValue('language','markdown');"),
             subButton(id = "react", icon = "supertinyicon-react",
-                      tooltip = "jsx",
-                      onclick = "Shiny.setInputValue('language','jsx');")
+                       tooltip = "jsx",
+                       onclick = "Shiny.setInputValue('language','jsx');")
           )
         )
       ),
@@ -155,7 +206,10 @@ server <- function(language, notfound){
         jsx = "babel",
         markdown = "markdown"
       )
-      session$sendCustomMessage("code", list(code = input[["code"]], parser = parser))
+      session$sendCustomMessage(
+        "code",
+        list(code = input[["code"]], parser = parser)
+      )
     })
 
     observeEvent(input[["prettyCode"]], {
@@ -276,7 +330,8 @@ shinyPrettier <- function(file, language, code,
   requireNamespace("shiny")
   requireNamespace("shinyAce")
   requireNamespace("shinythemes")
-  requireNamespace("shinyMultiActionButton")
+  if(!isNamespaceLoaded("shinyPrettier"))
+    attachNamespace("shinyPrettier")
   shinyApp(ui(language, code, parser, theme, fontSize),
            server(language, notfound))
 }
